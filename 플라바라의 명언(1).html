@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>다솜이의 행복 조언</title>
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #fff3c4, #ffd6d6);
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .character {
+      position: relative;
+    }
+
+    .quote-bubble {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      font-size: 1.3rem;
+      color: #333;
+      position: relative;
+      animation: fadeInBubble 1s ease;
+    }
+
+    .quote-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 40px;
+      width: 0;
+      height: 0;
+      border: 15px solid transparent;
+      border-top-color: #fff;
+    }
+
+    .message-bubble {
+      background-color: #ffebeb;
+      border-radius: 20px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+      display: inline-block;
+      font-size: 1.1rem;
+      color: #555;
+      animation: fadeInBubble 1s ease;
+    }
+
+    @keyframes fadeInBubble {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    button {
+      background-color: #ff9f9f;
+      color: white;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: 0.5rem;
+    }
+
+    button:hover {
+      background-color: #ff7f7f;
+    }
+
+    img {
+      max-width: 220px;
+      margin-top: -10px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌸 다솜이의 오늘 조언 🌸</h1>
+    <div class="character">
+      <div class="quote-bubble" id="quote">조언을 들으려면 버튼을 눌러줘! 🐻💬</div>
+      <div class="message-bubble" id="message" style="display:none">🐻 "오늘은 이미 조언을 받았어! 내일 또 와줘!"</div>
+      <img src="https://marketplace.canva.com/Hsq-Q/MAGScQHsq-Q/1/tl/canva-cartoon-capybara-in-onsen-handdrawn-illustration-MAGScQHsq-Q.png" alt="다솜이">
+    </div>
+    <button onclick="showQuote()">조언 받기 💡</button>
+    <button onclick="rerollQuote()" id="reroll" style="display:none">다시 뽑기 🔄</button>
+  </div>
+
+  <script>
+    const quotes = [
+      "행복한 삶을 살기 위해 필요한 것은 용기뿐이다. - 플라톤",
+      "네 자신이 되어라. 다른 사람은 이미 있으니까. - 오스카 와일드",
+      "내일 지구의 종말이 오더라도 나는 오늘 사과나무를 심겠다. - 마르틴 루터",
+      "실패는 성공의 어머니이다. - 속담",
+      "모든 위대한 일은 한 걸음부터 시작된다. - 노자",
+      "가장 어두운 밤도 끝나고 태양은 다시 떠오른다. - 빅토르 위고",
+      "작은 친절은 큰 사랑의 시작이다. - 마더 테레사",
+      "성공은 넘어지지 않는 것이 아니라, 넘어질 때마다 다시 일어나는 것이다. - 넬슨 만델라",
+      "생각이 운명을 만든다. - 마하트마 간디",
+      "작은 일이 큰 차이를 만든다. - 나폴레옹 힐",
+      "내일은 오늘보다 더 나을 것이다. - 아브라함 링컨",
+      "노력 없는 재능은 아무 의미가 없다. - 알베르트 아인슈타인",
+      "꾸준함은 천재를 이긴다. - 토마스 에디슨",
+      "가장 좋은 방법은 직접 해보는 것이다. - 레오나르도 다빈치",
+      "네 마음의 소리를 따라가라. - 스티브 잡스",
+      "배움에는 끝이 없다. - 공자",
+      "진짜 용기는 두려움 속에서도 나아가는 것이다. - 넬슨 만델라",
+      "남을 도우면 나도 행복해진다. - 헬렌 켈러",
+      "항상 웃어라. 그것이 최고의 약이다. - 찰리 채플린",
+      "꿈은 이루어진다. 포기하지 않으면. - 월트 디즈니",
+      "사람은 실수하면서 성장한다. - 괴테",
+      "친절은 누구에게나 줄 수 있는 선물이다. - 달라이 라마",
+      "호기심은 모든 학문의 시작이다. - 아리스토텔레스",
+      "매일 조금씩 앞으로 가라. - 무명",
+      "좋은 생각이 좋은 행동을 만든다. - 마하트마 간디",
+      "오늘을 사랑하라. 오늘은 다시 오지 않는다. - 에머슨",
+      "변화는 작은 선택에서 시작된다. - 제인 구달",
+      "실패는 또 다른 기회다. - 헨리 포드",
+      "진심은 통한다. - 무명",
+      "세상은 너로 인해 더 좋아질 수 있다. - 프레드 로저스"
+     "하루하루를 의미 있게 보내면, 인생이 의미 있는 것이 된다. — 존 F. 케네디",
+      "할 수 있다고 생각하면 할 수 있고, 할 수 없다고 생각하면 할 수 없다. — 헨리 포드",
+      "다른 사람을 도와주는 것은 내가 더 행복해지는 길이기도 해요. — 달라이 라마",
+      "천 마디 말보다 하나의 행동이 더 중요하다. — 마하트마 간디",
+      "실패는 성공의 어머니예요. 실패를 두려워하지 마세요. — 토머스 에디슨",
+      "작은 친절도 세상을 바꿀 수 있어요. — 에이브러햄 링컨",
+      "용기는 두려움을 없애는 것이 아니라, 두려워도 해내는 거예요. — 넬슨 만델라",
+      "꿈을 이루고 싶다면 먼저 꿈을 꾸어야 해요. — 월트 디즈니",
+      "공부는 미래에 대한 투자예요. 오늘의 노력이 내일을 만든답니다. — 벤자민 프랭클린",
+      "자신을 믿는 순간, 모든 것이 가능해져요. — 요한 볼프강 폰 괴테",
+      "가장 어두운 밤도 끝나고, 해는 다시 떠오릅니다. — 빅토르 위고",
+      "작은 일이라도 정성을 다하면 큰 기쁨이 생겨요. — 마더 테레사",
+      "세상을 바꾸고 싶다면 먼저 당신 자신을 바꾸세요. — 마하트마 간디",
+      "실패해도 괜찮아. 계속 나아가면 돼. — 마이클 조던",
+      "웃음은 마음의 햇살이에요. — 조셉 애디슨",
+      "혼자 꾸는 꿈은 그저 꿈이지만, 함께 꾸는 꿈은 현실이 됩니다. — 헬렌 켈러",
+      "당신이 할 수 있다고 믿으면, 이미 반은 이룬 거예요. — 시어도어 루스벨트",
+      "중요한 건 얼마나 많이 넘어졌느냐가 아니라, 다시 일어서는 거예요. — 넬슨 만델라",
+      "성공은 결코 우연이 아니에요. 노력, 배움, 인내가 함께 만들어냅니다. — 콜린 파월",
+      "매일 조금씩 노력하면 큰 변화를 만들 수 있어요. — 플라톤"
+    ];
+
+    function showQuote() {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastShown = localStorage.getItem("lastQuoteDate");
+      const lastQuote = localStorage.getItem("lastQuoteText");
+      const quoteEl = document.getElementById("quote");
+      const messageEl = document.getElementById("message");
+      const rerollBtn = document.getElementById("reroll");
+
+      if (lastShown === today && lastQuote) {
+        quoteEl.innerText = lastQuote;
+        messageEl.style.display = "inline-block";
+        rerollBtn.style.display = "inline-block";
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const newQuote = quotes[randomIndex];
+      quoteEl.innerText = newQuote;
+      quoteEl.style.animation = "none";
+      void quoteEl.offsetWidth;
+      quoteEl.style.animation = "fadeInBubble 1s ease";
+      messageEl.style.display = "inline-block";
+      rerollBtn.style.display = "inline-block";
+
+      localStorage.setItem("lastQuoteDate", today);
+      localStorage.setItem("lastQuoteText", newQuote);
+    }
+
+    function rerollQuote() {
+      const quoteEl = document.getElementById("quote");
+      const today = new Date().toISOString().slice(0, 10);
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const newQuote = quotes[randomIndex];
+      quoteEl.innerText = newQuote;
+      quoteEl.style.animation = "none";
+      void quoteEl.offsetWidth;
+      quoteEl.style.animation = "fadeInBubble 1s ease";
+      localStorage.setItem("lastQuoteDate", today);
+      localStorage.setItem("lastQuoteText", newQuote);
+    }
+  </script>
+</body>
+</html>
